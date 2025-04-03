@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pandas as pd
 import pytest
 
@@ -7,16 +9,16 @@ from ynabify.parser.swisscard_xlsx import SwisscardXlsx
 
 class TestCanParse:
     def test_should_reject_nonexisting_path(self) -> None:
-        assert not SwisscardXlsx.can_parse("foobar1234.xlsx")
+        assert not SwisscardXlsx.can_parse(Path("foobar1234.xlsx"))
 
     def test_should_reject_non_xlsx_extension(self) -> None:
-        assert not SwisscardXlsx.can_parse("tests/data/swisscard_xlsx/foreign_file_extension.txt")
+        assert not SwisscardXlsx.can_parse(Path("tests/data/swisscard_xlsx/foreign_file_extension.txt"))
 
     def test_should_reject_missing_columns(self) -> None:
-        assert not SwisscardXlsx.can_parse("tests/data/swisscard_xlsx/empty_excel.xlsx")
+        assert not SwisscardXlsx.can_parse(Path("tests/data/swisscard_xlsx/empty_excel.xlsx"))
 
 
-example_path = "tests/data/swisscard_xlsx/example_bill.xlsx"
+example_path = Path("tests/data/swisscard_xlsx/example_bill.xlsx").resolve()
 
 
 class TestGetTransactions:
@@ -26,11 +28,11 @@ class TestGetTransactions:
 
     def test_should_reject_unparseable_file(self) -> None:
         with pytest.raises(ParseError):
-            SwisscardXlsx("tests/data/swisscard_xlsx/foreign_file_extension.txt")
+            SwisscardXlsx(Path("tests/data/swisscard_xlsx/foreign_file_extension.txt"))
 
     def test_should_load_file_with_correct_columns(self) -> None:
         cut = SwisscardXlsx(example_path)
-        assert all(col in cut._df.columns for col in ["Transaktionsdatum", "Beschreibung", "Betrag", "Status"])  # noqa: SLF001
+        assert all(col in cut._df.columns for col in ("Transaktionsdatum", "Beschreibung", "Betrag", "Status"))  # noqa: SLF001
 
     def test_should_return_DataFrame_with_sensible_columns(self) -> None:  # noqa: N802
         cut = SwisscardXlsx(example_path)
@@ -42,7 +44,7 @@ class TestGetTransactions:
         assert "Outflow" in df.columns
 
     def test_should_return_empty_DataFrame(self) -> None:  # noqa: N802
-        cut = SwisscardXlsx("tests/data/swisscard_xlsx/empty_bill.xlsx")
+        cut = SwisscardXlsx(Path("tests/data/swisscard_xlsx/empty_bill.xlsx"))
         df = cut.get_transactions()["main"]
         assert df.empty
         assert "Date" in df.columns
@@ -79,7 +81,7 @@ class TestGetTransactions:
         assert all(df["Outflow"] >= 0)
 
     def test_should_return_empty_DataFrame_with_correct_columns_if_no_booked_transactions(self) -> None:  # noqa: N802
-        cut = SwisscardXlsx("tests/data/swisscard_xlsx/no_booked_transactions.xlsx")
+        cut = SwisscardXlsx(Path("tests/data/swisscard_xlsx/no_booked_transactions.xlsx"))
         df = cut.get_transactions()["main"]
         assert df.empty
         assert "Date" in df.columns

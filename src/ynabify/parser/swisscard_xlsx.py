@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 import pandas as pd
 
@@ -11,19 +11,17 @@ pd.set_option("display.max_colwidth", 30)
 
 class SwisscardXlsx(ParserBase):
     @staticmethod
-    def can_parse(path: str) -> bool:
-        if os.path.splitext(path)[1].lower() != ".xlsx":
+    def can_parse(path: Path) -> bool:
+        if path.suffix.lower() != ".xlsx":
             return False
-        if not os.path.exists(path):
+        if not path.exists():
             return False
         df = pd.read_excel(path)
         # Reject if we can't find these columns:
         # Transaktionsdatum, Beschreibung, Betrag, Status
-        if not all(col in df.columns for col in ["Transaktionsdatum", "Beschreibung", "Betrag", "Status"]):
-            return False
-        return True
+        return all(col in df.columns for col in ("Transaktionsdatum", "Beschreibung", "Betrag", "Status"))
 
-    def __init__(self, path: str) -> None:
+    def __init__(self, path: Path) -> None:
         self.path = path
         if not SwisscardXlsx.can_parse(self.path):
             raise ParseError(self.path)

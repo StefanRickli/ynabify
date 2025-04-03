@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 import pandas as pd
@@ -55,7 +54,6 @@ class TestYnabify:
         args = [str(swisscard_xlsx_example_path), "-d", str(output_path)]
         main(argv=args)
         df = pd.read_csv(output_path, header=0)
-        os.remove(output_path)
         required_cols = ["Date", "Payee", "Memo", "Outflow", "Inflow"]
         for r in required_cols:
             assert r in df.columns
@@ -71,7 +69,6 @@ class TestYnabify:
         ]
         main(argv=args)
         df = pd.read_csv(output_path, header=0)
-        os.remove(output_path)
         assert len(df.index) > 0
         assert pd.notna(df["Payee"]).all()
 

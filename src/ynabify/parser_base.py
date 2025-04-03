@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 import pandas as pd
 
@@ -6,7 +7,7 @@ import pandas as pd
 class ParserBase(ABC):
     @staticmethod
     @abstractmethod
-    def can_parse(path: str) -> bool:
+    def can_parse(path: Path) -> bool:
         pass
 
     @abstractmethod

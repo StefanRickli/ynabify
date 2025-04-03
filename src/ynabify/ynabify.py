@@ -1,6 +1,6 @@
 import argparse
 import logging
-import os
+import operator
 import shutil
 import time
 from pathlib import Path
@@ -21,7 +21,7 @@ def replace_text(string: str, text_from: list[str], text_to: list[str]) -> str:
     """If string contains one or more substrings from text_from, return the
     corresponding element from text_to where the matching substring is the longest.
     """
-    candidates: list[tuple[int, str]] = []
+    candidates: list[tuple[int, str]] = []  # noqa: FURB138
 
     for i, search_text in enumerate(text_from):
         if string.lower().find(search_text.lower()) != -1:
@@ -29,7 +29,7 @@ def replace_text(string: str, text_from: list[str], text_to: list[str]) -> str:
 
     if not candidates:
         return ""
-    return sorted(candidates, reverse=True, key=lambda key: key[0])[0][1]
+    return sorted(candidates, reverse=True, key=operator.itemgetter(0))[0][1]
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -40,17 +40,18 @@ def main(argv: list[str] | None = None) -> None:
     arg_parser.add_argument("-m", "--mapping", nargs="?", default="./mapping.xlsx")
     arg_parser.add_argument("-d", "--destination", nargs="?", default=None)
     args = arg_parser.parse_args() if argv is None else arg_parser.parse_args(argv)
+    src_path = Path(args.src).resolve()
 
     file_parser: ParserBase | None = None
-    if SwisscardXlsx.can_parse(args.src):
-        file_parser = SwisscardXlsx(args.src)
-    elif YnabXlsx.can_parse(args.src):
-        file_parser = YnabXlsx(args.src)
+    if SwisscardXlsx.can_parse(src_path):
+        file_parser = SwisscardXlsx(src_path)
+    elif YnabXlsx.can_parse(src_path):
+        file_parser = YnabXlsx(src_path)
     else:
-        logger.error(f"Cannot handle file: {args.src}")
+        logger.error(f"Cannot handle file: {src_path}")
         raise SystemExit(1)
 
-    if not os.path.exists(args.mapping):
+    if not Path(args.mapping).exists():
         shutil.copyfile("./tests/data/mapping_example.xlsx", args.mapping)
 
     replacements_raw = pd.read_excel(args.mapping, header=0)
@@ -58,7 +59,7 @@ def main(argv: list[str] | None = None) -> None:
     text_to = list(replacements_raw["to"])
 
     if args.destination is None:
-        out_file_base = Path(args.src).resolve().with_stem(Path(args.src).stem + "_ynab")
+        out_file_base = src_path.with_stem(Path(src_path).stem + "_ynab")
     else:
         out_file_base = Path(args.destination)
 
