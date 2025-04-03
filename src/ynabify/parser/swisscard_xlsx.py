@@ -24,7 +24,7 @@ class SwisscardXlsx(ParserBase):
     def __init__(self, path: Path) -> None:
         self.path = path
         if not SwisscardXlsx.can_parse(self.path):
-            raise ParseError(self.path)
+            raise ParseError(str(self.path))
         self._df = pd.read_excel(self.path)
 
     def get_transactions(self) -> dict[str, pd.DataFrame]:

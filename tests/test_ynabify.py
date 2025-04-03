@@ -23,7 +23,7 @@ class TestYnabify:
         out, err = capsys.readouterr()
         assert "src" in err
 
-    def test_should_reject_textfile(self, caplog: pytest.CaptureFixture[str]) -> None:
+    def test_should_reject_textfile(self, caplog: pytest.LogCaptureFixture) -> None:
         args = ["./tests/data/empty_textfile.txt"]
         with pytest.raises(SystemExit):
             main(argv=args)

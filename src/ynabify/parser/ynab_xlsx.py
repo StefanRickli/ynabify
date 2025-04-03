@@ -19,10 +19,10 @@ class YnabXlsx(ParserBase):
         df = pd.read_excel(path)
         return all(col in df.columns for col in ("Date", "Memo", "Outflow", "Inflow"))
 
-    def __init__(self, path: str):
+    def __init__(self, path: Path) -> None:
         self.path = path
         if not YnabXlsx.can_parse(self.path):
-            raise ParseError(self.path)
+            raise ParseError(str(self.path))
         self._df = pd.read_excel(self.path)
 
     def get_transactions(self) -> dict[str, pd.DataFrame]:
