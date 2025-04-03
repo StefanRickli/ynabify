@@ -1,0 +1,61 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ynabify"
+dynamic = ["version"]
+description = 'Parses banking bills and outputs them in YNAB compatible csv files'
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "Stefan Rickli", email = "git@stefanrickli.dev" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = []
+
+[project.urls]
+Documentation = "https://github.com/Stefan Rickli/ynabify#readme"
+Issues = "https://github.com/Stefan Rickli/ynabify/issues"
+Source = "https://github.com/Stefan Rickli/ynabify"
+
+[tool.hatch.version]
+path = "src/ynabify/__about__.py"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/ynabify tests}"
+
+[tool.coverage.run]
+source_pkgs = ["ynabify", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/ynabify/__about__.py",
+]
+
+[tool.coverage.paths]
+ynabify = ["src/ynabify", "*/ynabify/src/ynabify"]
+tests = ["tests", "*/ynabify/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
