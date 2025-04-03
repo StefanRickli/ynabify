@@ -4,4 +4,5 @@ $PSNativeCommandUseErrorActionPreference = $true
 
 get-command hatch > $null
 
-hatch env run pre-commit autoupdate
+hatch fmt
+hatch env run types:check
