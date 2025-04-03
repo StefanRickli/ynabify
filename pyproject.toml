@@ -21,7 +21,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
-dependencies = []
+dependencies = ["pandas", "openpyxl"]
 
 [project.urls]
 Documentation = "https://github.com/StefanRickli/YNABify#readme"
