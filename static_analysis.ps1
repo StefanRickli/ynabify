@@ -6,5 +6,5 @@ get-command hatch > $null
 
 $ErrorActionPreference = "Continue"
 
-hatch fmt
+hatch run pre-commit run --all-files
 hatch run types:check
