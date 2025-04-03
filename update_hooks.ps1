@@ -3,4 +3,4 @@ $ErrorActionPreference = "Stop"
 $PSNativeCommandUseErrorActionPreference = $true
 
 get-command hatch > $null
-hatch run pre-commit autoupdate
+hatch env run pre-commit autoupdate
