@@ -1,3 +1,4 @@
+from decimal import Decimal
 from pathlib import Path
 
 import pandas as pd
@@ -68,11 +69,11 @@ class TestGetTransactions:
         df = cut.get_transactions()["main"]
         assert all(df["Memo"])
 
-    def test_should_return_floats_in_inflow_outflow(self) -> None:
+    def test_should_return_decimals_in_inflow_outflow(self) -> None:
         cut = YnabXlsx(example_path)
         df = cut.get_transactions()["main"]
-        assert all(isinstance(x, float) for x in df["Inflow"])
-        assert all(isinstance(x, float) for x in df["Outflow"])
+        assert all(isinstance(x, Decimal) for x in df["Inflow"])
+        assert all(isinstance(x, Decimal) for x in df["Outflow"])
 
     def test_should_return_both_positive_inflow_and_outflow(self) -> None:
         cut = YnabXlsx(example_path)

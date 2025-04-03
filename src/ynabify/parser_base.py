@@ -5,6 +5,8 @@ import pandas as pd
 
 
 class ParserBase(ABC):
+    target_columns = ("Date", "Payee", "Memo", "Inflow", "Outflow")
+
     @staticmethod
     @abstractmethod
     def can_parse(path: Path) -> bool:

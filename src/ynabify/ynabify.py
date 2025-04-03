@@ -12,6 +12,7 @@ import pandas as pd
 if TYPE_CHECKING:
     from ynabify.parser_base import ParserBase
 
+from ynabify.parser.raiffeisen_csv import RaiffeisenCsv
 from ynabify.parser.swisscard_xlsx import SwisscardXlsx
 from ynabify.parser.ynab_xlsx import YnabXlsx
 
@@ -46,6 +47,8 @@ def main(argv: list[str] | None = None) -> None:
     file_parser: ParserBase | None = None
     if SwisscardXlsx.can_parse(src_path):
         file_parser = SwisscardXlsx(src_path)
+    elif RaiffeisenCsv.can_parse(src_path):
+        file_parser = RaiffeisenCsv(src_path)
     elif YnabXlsx.can_parse(src_path):
         file_parser = YnabXlsx(src_path)
     else:
@@ -67,7 +70,8 @@ def main(argv: list[str] | None = None) -> None:
         out_file_base = Path(args.destination)
 
     dfs = file_parser.get_transactions()
-    for name, df in dfs.items():
+    for account, df in dfs.items():
+        name = replace_text(account, text_from, text_to) or account
         if len(dfs) > 1:
             out_file_path = str(out_file_base.with_name(out_file_base.stem + f"_{name}").with_suffix(".csv"))
         else:

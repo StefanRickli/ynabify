@@ -8,6 +8,7 @@ from ynabify.ynabify import main
 
 swisscard_xlsx_example_path = Path("tests/data/swisscard_xlsx/example_bill.xlsx").resolve()
 ynab_xlsx_example_path = Path("tests/data/ynab_xlsx/example_bill.xlsx").resolve()
+raiffeisen_csv_example_path = Path("tests/data/raiffeisen_csv/example_bill.csv").resolve()
 
 
 @pytest.fixture
@@ -31,6 +32,11 @@ class TestYnabify:
 
     def test_should_not_raise_on_swisscard_xlsx(self, output_path: Path) -> None:
         args = [str(swisscard_xlsx_example_path), "-d", str(output_path)]
+        # Expect no exception
+        main(argv=args)
+
+    def test_should_not_raise_on_raiffeisen_csv(self, output_path: Path) -> None:
+        args = [str(raiffeisen_csv_example_path), "-d", str(output_path)]
         # Expect no exception
         main(argv=args)
 

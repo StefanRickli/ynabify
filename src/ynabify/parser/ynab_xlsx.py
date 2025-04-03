@@ -1,4 +1,5 @@
 import warnings
+from decimal import Decimal
 from pathlib import Path
 
 import pandas as pd
@@ -39,8 +40,8 @@ class YnabXlsx(ParserBase):
                 "Date": pd.to_datetime(row["Date"], format="%d.%m.%Y"),
                 "Payee": "",
                 "Memo": row["Memo"],
-                "Inflow": float(row["Inflow"]) if not pd.isna(row["Inflow"]) else 0.0,
-                "Outflow": float(row["Outflow"]) if not pd.isna(row["Outflow"]) else 0.0,
+                "Inflow": Decimal(row["Inflow"]) if not pd.isna(row["Inflow"]) else Decimal(0),
+                "Outflow": Decimal(row["Outflow"]) if not pd.isna(row["Outflow"]) else Decimal(0),
             }
             for _, row in self._df.iterrows()
         ]
