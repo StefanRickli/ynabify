@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
@@ -29,7 +29,10 @@ Issues = "https://github.com/StefanRickli/YNABify/issues"
 Source = "https://github.com/StefanRickli/YNABify"
 
 [tool.hatch.version]
-path = "src/ynabify/__about__.py"
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+version_scheme = "no-guess-dev"
 
 [tool.hatch.envs.types]
 extra-dependencies = ["mypy>=1.0.0"]
