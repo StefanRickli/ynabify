@@ -35,10 +35,10 @@ source = "vcs"
 version_scheme = "no-guess-dev"
 
 [tool.hatch.envs.default]
-dependencies = ["pre-commit"]
+extra-dependencies = ["pre-commit"]
 
 [tool.hatch.envs.types]
-extra-dependencies = ["mypy>=1.0.0"]
+extra-dependencies = ["mypy>=1.0.0", "pytest"]
 
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/ynabify tests}"
