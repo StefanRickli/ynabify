@@ -39,8 +39,12 @@ dependencies = ["pre-commit"]
 
 [tool.hatch.envs.types]
 extra-dependencies = ["mypy>=1.0.0"]
+
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:src/ynabify tests}"
+
+[tool.hatch.envs.hatch-static-analysis]
+config-path = ".ruff_config.toml"
 
 [tool.coverage.run]
 source_pkgs = ["ynabify", "tests"]
@@ -54,3 +58,6 @@ tests = ["tests", "*/ynabify/tests"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+
+[tool.ruff]
+extend = ".ruff_config.toml"
