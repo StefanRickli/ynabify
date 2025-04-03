@@ -28,6 +28,9 @@ Documentation = "https://github.com/StefanRickli/YNABify#readme"
 Issues = "https://github.com/StefanRickli/YNABify/issues"
 Source = "https://github.com/StefanRickli/YNABify"
 
+[project.scripts]
+ynabify = "ynabify.ynabify:main"
+
 [tool.hatch.version]
 source = "vcs"
 
@@ -50,7 +53,6 @@ config-path = ".ruff_config.toml"
 source_pkgs = ["ynabify", "tests"]
 branch = true
 parallel = true
-omit = ["src/ynabify/__about__.py"]
 
 [tool.coverage.paths]
 ynabify = ["src/ynabify", "*/ynabify/src/ynabify"]

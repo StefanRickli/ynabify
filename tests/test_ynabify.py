@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 import pandas as pd
@@ -38,12 +39,13 @@ class TestYnabify:
         # Expect no exception
         main(argv=args)
 
-    def test_should_create_output_file(self) -> None:
-        args = [str(swisscard_xlsx_example_path)]
+    def test_should_create_output_file(self, tmp_path: Path) -> None:
+        src_path = tmp_path / "example_bill.xlsx"
+        shutil.copyfile(swisscard_xlsx_example_path, src_path)
+        args = [str(src_path)]
         main(argv=args)
-        target_file = swisscard_xlsx_example_path.with_stem(swisscard_xlsx_example_path.stem + "_ynab")
+        target_file = src_path.with_name(src_path.stem + "_ynab").with_suffix(".csv")
         assert target_file.exists()
-        target_file.unlink()
 
     def test_should_create_output_file_with_custom_destination(self, output_path: Path) -> None:
         args = [str(swisscard_xlsx_example_path), "-d", str(output_path)]

@@ -66,9 +66,9 @@ def main(argv: list[str] | None = None) -> None:
     dfs = file_parser.get_transactions()
     for name, df in dfs.items():
         if len(dfs) > 1:
-            out_file_path = str(out_file_base.with_stem(out_file_base.stem + f"_{name}"))
+            out_file_path = str(out_file_base.with_name(out_file_base.stem + f"_{name}").with_suffix(".csv"))
         else:
-            out_file_path = str(out_file_base)
+            out_file_path = str(out_file_base.with_suffix(".csv"))
 
         df = df.set_index("Date")  # noqa: PLW2901
         df["Payee"] = df.apply(lambda row: replace_text(row["Memo"], text_from, text_to), axis=1)
