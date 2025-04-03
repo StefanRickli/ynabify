@@ -1,3 +1,4 @@
+import warnings
 from pathlib import Path
 
 import pandas as pd
@@ -16,14 +17,18 @@ class YnabXlsx(ParserBase):
             return False
         if not path.exists():
             return False
-        df = pd.read_excel(path)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            df = pd.read_excel(path)
         return all(col in df.columns for col in ("Date", "Memo", "Outflow", "Inflow"))
 
     def __init__(self, path: Path) -> None:
         self.path = path
         if not YnabXlsx.can_parse(self.path):
             raise ParseError(str(self.path))
-        self._df = pd.read_excel(self.path)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            self._df = pd.read_excel(self.path)
 
     def get_transactions(self) -> dict[str, pd.DataFrame]:
         # if self._df.empty:

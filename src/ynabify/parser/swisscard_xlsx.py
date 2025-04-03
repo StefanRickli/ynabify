@@ -1,3 +1,4 @@
+import warnings
 from pathlib import Path
 
 import pandas as pd
@@ -16,7 +17,9 @@ class SwisscardXlsx(ParserBase):
             return False
         if not path.exists():
             return False
-        df = pd.read_excel(path)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            df = pd.read_excel(path)
         # Reject if we can't find these columns:
         # Transaktionsdatum, Beschreibung, Betrag, Status
         return all(col in df.columns for col in ("Transaktionsdatum", "Beschreibung", "Betrag", "Status"))
@@ -25,7 +28,9 @@ class SwisscardXlsx(ParserBase):
         self.path = path
         if not SwisscardXlsx.can_parse(self.path):
             raise ParseError(str(self.path))
-        self._df = pd.read_excel(self.path)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            self._df = pd.read_excel(self.path)
 
     def get_transactions(self) -> dict[str, pd.DataFrame]:
         if self._df.empty:

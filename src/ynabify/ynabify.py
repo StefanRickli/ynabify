@@ -3,6 +3,7 @@ import logging
 import operator
 import shutil
 import time
+import warnings
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -54,7 +55,9 @@ def main(argv: list[str] | None = None) -> None:
     if not Path(args.mapping).exists():
         shutil.copyfile("./tests/data/mapping_example.xlsx", args.mapping)
 
-    replacements_raw = pd.read_excel(args.mapping, header=0)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        replacements_raw = pd.read_excel(args.mapping, header=0)
     text_from = list(replacements_raw["from"])
     text_to = list(replacements_raw["to"])
 
