@@ -4,5 +4,7 @@ $PSNativeCommandUseErrorActionPreference = $true
 
 get-command hatch > $null
 
+$ErrorActionPreference = "Continue"
+
 hatch fmt
-hatch env run types:check
+hatch run types:check
