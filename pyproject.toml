@@ -34,6 +34,9 @@ source = "vcs"
 [tool.hatch.version.raw-options]
 version_scheme = "no-guess-dev"
 
+[tool.hatch.envs.default]
+dependencies = ["pre-commit"]
+
 [tool.hatch.envs.types]
 extra-dependencies = ["mypy>=1.0.0"]
 [tool.hatch.envs.types.scripts]
