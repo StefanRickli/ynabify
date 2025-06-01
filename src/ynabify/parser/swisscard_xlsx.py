@@ -21,7 +21,7 @@ class SwisscardXlsx(ParserBase):
             return False
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            df = pd.read_excel(path)
+            df = pd.read_excel(path, dtype=str)
         # Reject if we can't find these columns:
         # Transaktionsdatum, Beschreibung, Betrag, Status
         return all(col in df.columns for col in ("Transaktionsdatum", "Beschreibung", "Betrag", "Status"))
@@ -32,7 +32,7 @@ class SwisscardXlsx(ParserBase):
             raise ParseError(str(self.path))
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            self._df = pd.read_excel(self.path)
+            self._df = pd.read_excel(self.path, dtype=str)
 
     def get_transactions(self) -> dict[str, pd.DataFrame]:
         if self._df.empty:
@@ -42,13 +42,14 @@ class SwisscardXlsx(ParserBase):
         for _, row in tqdm(self._df.iterrows(), desc="Processing", total=len(self._df)):
             if row["Status"] != "Gebucht":
                 continue
+            amount = Decimal(row["Betrag"])
             transactions.append(
                 {
-                    "Date": pd.to_datetime(row["Transaktionsdatum"], format="%d.%m.%Y"),
+                    "Date": pd.to_datetime(row["Transaktionsdatum"], format="%Y-%m-%d 00:00:00"),
                     "Payee": "",
                     "Memo": row["Beschreibung"],
-                    "Inflow": Decimal(-row["Betrag"]) if row["Betrag"] < 0 else Decimal(0),
-                    "Outflow": Decimal(row["Betrag"]) if row["Betrag"] > 0 else Decimal(0),
+                    "Inflow": -amount if amount < 0 else Decimal(0),
+                    "Outflow": amount if amount > 0 else Decimal(0),
                 },
             )
 
