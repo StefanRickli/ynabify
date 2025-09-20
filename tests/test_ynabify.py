@@ -6,7 +6,7 @@ import pytest
 
 from ynabify.ynabify import main
 
-swisscard_xlsx_example_path = Path("tests/data/swisscard_xlsx/example_bill.xlsx").resolve()
+swisscard_xlsx_example_path = Path("tests/data/swisscard_xlsx/example_bill_de.xlsx").resolve()
 ynab_xlsx_example_path = Path("tests/data/ynab_xlsx/example_bill.xlsx").resolve()
 raiffeisen_csv_example_path = Path("tests/data/raiffeisen_csv/example_bill.csv").resolve()
 
